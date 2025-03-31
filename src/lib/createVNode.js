@@ -6,6 +6,10 @@
  */
 
 export function createVNode(type, props, ...children) {
-  const vNode = { type, props, children: children.flat(Infinity) };
+  const vNode = {
+    type,
+    props,
+    children: children.flat(Infinity).filter((v) => typeof v === "number" || v),
+  };
   return vNode;
 }
