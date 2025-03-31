@@ -22,6 +22,9 @@ export function createElement(vNode) {
   // 1. vNode.type에 해당하는 요소를 생성
   const element = document.createElement(vNode.type);
 
+  /**
+   * Refactor - 함수로 빼도 괜찮을 듯 하다.
+   */
   // 2. vNode.props의 속성들을 적용 (이벤트 리스너, className, 일반 속성 등 처리)
   Object.entries(vNode.props || {}).forEach(([key, value]) => {
     if (key === "className") {
