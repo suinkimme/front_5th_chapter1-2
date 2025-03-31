@@ -18,8 +18,21 @@ export function createElement(vNode) {
     return fragment;
   }
 
+  // 위 경우가 아니면 실제 DOM 요소를 생성합니다:
+  // 1. vNode.type에 해당하는 요소를 생성
   const element = document.createElement(vNode.type);
+
+  // 2. vNode.props의 속성들을 적용 (이벤트 리스너, className, 일반 속성 등 처리)
+  Object.entries(vNode.props || {}).forEach(([key, value]) => {
+    if (key === "className") {
+      element.setAttribute("class", value);
+    } else {
+      element.setAttribute(key, value);
+    }
+  });
+
   (vNode.children || []).forEach((child) => {
+    // 3. vNode.children의 각 자식에 대해 createElement를 재귀 호출하여 추가
     element.appendChild(createElement(child));
   });
 
