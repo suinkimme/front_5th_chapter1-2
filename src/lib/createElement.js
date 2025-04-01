@@ -1,4 +1,4 @@
-// import { addEvent } from "./eventManager";
+import { addEvent } from "./eventManager";
 
 export function createElement(vNode) {
   // vNode가 null, undefined, boolean 일 경우, 빈 텍스트 노드를 반환합니다.
@@ -29,6 +29,9 @@ export function createElement(vNode) {
   Object.entries(vNode.props || {}).forEach(([key, value]) => {
     if (key === "className") {
       element.setAttribute("class", value);
+    } else if (key.startsWith("on") && typeof value === "function") {
+      const eventType = key.slice(2).toLowerCase();
+      addEvent(element, eventType, value);
     } else {
       element.setAttribute(key, value);
     }

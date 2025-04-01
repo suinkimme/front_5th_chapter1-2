@@ -14,7 +14,6 @@ export function setupEventListeners(root) {
   // 새로운 root로 바꾸기 전 기존 root의 리서너를 모두 제거함
   if (rootElement && rootElement !== root) {
     eventMap.forEach((_, eventType) => {
-      console.log(eventType);
       rootElement.removeEventListener(eventType, handleEvent);
     });
   }
