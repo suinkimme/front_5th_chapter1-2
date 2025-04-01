@@ -4,6 +4,9 @@
  * - addEvent와 setupEventListeners에서 한 DOM 요소에 하나의 이벤트만 할당할 수 있는 형태다.
  * - Map으로 엘리먼트와 이벤트를 연결해 관리하고 있기 때문이다.
  * - 이벤트 핸들러를 배열로 관리하면 해결할 수 있을 듯 하다.
+ *
+ * 2. Map을 WeakMap으로 구현해봐도 좋을 것 같다.
+ * - Map은 GC가 자동으로 삭제 대상으로 보지 않는 문제가 있음
  */
 
 const eventMap = new Map();
@@ -27,7 +30,7 @@ export function setupEventListeners(root) {
 
 /**
  * Refactor
- * 2. 버블링, 캡처링 제어와 연결되도록 코드를 수정해볼 수 있을 것 같음
+ * 1. 버블링, 캡처링 제어와 연결되도록 코드를 수정해볼 수 있을 것 같음
  */
 
 // 이벤트 위임과 제거에 사용되는 공용 이벤트 처리기
