@@ -18,9 +18,7 @@ export function normalizeVNode(vNode) {
 
   // 그 외의 경우, vNode의 자식 요소들을 재귀적으로 표준화하고, null 또는 undefined 값을 필터링하여 반환합니다.
   const normalizedChildren = (vNode.children || [])
-    .map((child) => {
-      return normalizeVNode(child);
-    })
+    .map((child) => normalizeVNode(child))
     .filter((v) => v !== "");
 
   return {
