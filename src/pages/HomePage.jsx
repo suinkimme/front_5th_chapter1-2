@@ -3,6 +3,36 @@ import { createVNode } from "../lib";
 
 import { Footer, Header, Navigation, Post, PostForm } from "../components";
 import { globalStore } from "../stores";
+import { router } from "../router";
+
+function updatePosts(postId) {
+  const { posts, currentUser } = globalStore.getState();
+  const { logout } = globalStore.actions;
+  const username = currentUser?.username;
+
+  if (!username) {
+    alert("다시 로그인해주세요");
+    logout();
+    router.get().push("/logint");
+    return;
+  }
+
+  const post = posts.find((p) => p.id === postId);
+  if (!post) return;
+
+  const oldLikeUsers = post.likeUsers ? post.likeUsers : [];
+  const hasLiked = oldLikeUsers.includes(username);
+
+  const updatedLikeUsers = hasLiked
+    ? oldLikeUsers.filter((user) => user !== username)
+    : [...oldLikeUsers, username];
+
+  const updatedPosts = posts.map((p) =>
+    p.id === postId ? { ...p, likeUsers: updatedLikeUsers } : p,
+  );
+
+  globalStore.setState({ posts: updatedPosts });
+}
 
 /**
  * 심화과제
@@ -14,30 +44,13 @@ export const HomePage = () => {
   const { posts, loggedIn, currentUser } = globalStore.getState();
   const username = currentUser?.username;
 
-  const hasLiked = (likeUsers) => {
-    return likeUsers.includes(username);
-  };
-
   const handleLikePost = (postId) => {
     if (!loggedIn) {
       alert("로그인 후 이용해주세요");
       return;
     }
 
-    const post = posts.find((p) => p.id === postId);
-    if (!post) return;
-
-    const oldLikeUsers = post.likeUsers ? post.likeUsers : [];
-
-    const updatedLikeUsers = hasLiked(oldLikeUsers)
-      ? oldLikeUsers.filter((user) => user !== username)
-      : [...oldLikeUsers, username];
-
-    const updatedPosts = posts.map((p) =>
-      p.id === postId ? { ...p, likeUsers: updatedLikeUsers } : p,
-    );
-
-    globalStore.setState({ posts: updatedPosts });
+    updatePosts(postId);
   };
 
   return (
@@ -56,7 +69,7 @@ export const HomePage = () => {
                 return (
                   <Post
                     {...props}
-                    activationLike={hasLiked(likeUsers)}
+                    activationLike={likeUsers.includes(username)}
                     handleLikePost={() => handleLikePost(id)}
                   />
                 );
