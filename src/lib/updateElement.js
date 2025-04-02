@@ -5,7 +5,7 @@ function updateAttributes(target, originNewProps, originOldProps) {
   Object.entries(originNewProps || {}).forEach(([key, value]) => {
     if (key === "className") {
       target.setAttribute("class", value);
-    } else if (key.startsWith("on") && typeof vlaue === "function") {
+    } else if (key.startsWith("on") && typeof value === "function") {
       const eventType = key.slice(2).toLowerCase();
       const originOldEventHandler = originOldProps[key];
       if (value === originOldEventHandler) {
