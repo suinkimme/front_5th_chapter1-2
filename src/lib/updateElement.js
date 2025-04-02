@@ -1,7 +1,37 @@
-// import { addEvent, removeEvent } from "./eventManager";
+import { addEvent, removeEvent } from "./eventManager";
 import { createElement } from "./createElement.js";
 
-// function updateAttributes(target, originNewProps, originOldProps) {}
+function updateAttributes(target, originNewProps, originOldProps) {
+  Object.entries(originNewProps || {}).forEach(([key, value]) => {
+    if (key === "className") {
+      target.setAttribute("class", value);
+    } else if (key.startsWith("on") && typeof vlaue === "function") {
+      const eventType = key.slice(2).toLowerCase();
+      const originOldEventHandler = originOldProps[key];
+      if (value === originOldEventHandler) {
+        return;
+      }
+      originOldEventHandler &&
+        removeEvent(target, eventType, originOldEventHandler);
+      value && addEvent(eventType, target, value);
+    } else {
+      target.setAttribute(key, value);
+    }
+  });
+
+  Object.entries(originOldProps || {}).forEach(([key, value]) => {
+    if (key in originNewProps) {
+      return;
+    }
+
+    if (key.startsWith("on")) {
+      const eventType = key.slice(2).toLowerCase();
+      removeEvent(target, eventType, value);
+    } else {
+      target.removeAttribute(key);
+    }
+  });
+}
 
 export function updateElement(parentElement, newNode, oldNode, index = 0) {
   const oldElement = parentElement.childNodes[index];
@@ -40,16 +70,24 @@ export function updateElement(parentElement, newNode, oldNode, index = 0) {
     }
   }
 
-  // 같은 타입의 노드 업데이트
+  /**
+   * @desc 같은 타입의 노드 업데이트
+   */
+
   const newChildren = newNode.children || [];
   const oldChildren = oldNode.children || [];
   const maxChildrenLength = Math.max(newChildren.length, oldChildren.length);
 
+  // 자식 노드 재귀적 업데이트
   for (let i = 0; i < maxChildrenLength; i++) {
     updateElement(oldElement, newChildren[i], oldChildren[i], i);
   }
 
+  // 불필요한 자식 노드 제거
   while (oldElement.childNodes.length > newChildren.length) {
     oldElement.removeChild(oldElement.lastChild);
   }
+
+  // 속성 업데이트
+  updateAttributes(oldElement, newNode.props || {}, oldNode.props || {});
 }
