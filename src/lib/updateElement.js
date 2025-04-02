@@ -68,6 +68,8 @@ export function updateElement(parentElement, newNode, oldNode, index = 0) {
     } else {
       parentElement.appendChild(newElement);
     }
+
+    return;
   }
 
   /**
