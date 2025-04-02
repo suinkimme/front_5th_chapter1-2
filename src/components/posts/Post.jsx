@@ -2,24 +2,14 @@
 import { createVNode } from "../../lib";
 import { toTimeFormat } from "../../utils/index.js";
 
-import { globalStore } from "../../stores";
-
 export const Post = ({
   author,
   time,
   content,
   likeUsers,
   activationLike = false,
+  handleLikePost,
 }) => {
-  const { loggedIn } = globalStore.getState();
-
-  const handleLikePost = () => {
-    if (!loggedIn) {
-      alert("로그인 후 이용해주세요");
-      return;
-    }
-  };
-
   return (
     <div className="bg-white rounded-lg shadow p-4 mb-4">
       <div className="flex items-center mb-2">
