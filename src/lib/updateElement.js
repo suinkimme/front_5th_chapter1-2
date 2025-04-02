@@ -11,9 +11,8 @@ function updateAttributes(target, originNewProps, originOldProps) {
       if (value === originOldEventHandler) {
         return;
       }
-      originOldEventHandler &&
-        removeEvent(target, eventType, originOldEventHandler);
-      value && addEvent(eventType, target, value);
+      originOldEventHandler && removeEvent(target, eventType);
+      value && addEvent(target, eventType, value);
     } else {
       target.setAttribute(key, value);
     }
